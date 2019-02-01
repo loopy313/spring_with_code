@@ -2,7 +2,7 @@
 <%@ page session="false" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../include/header.jsp" %>
-<form role="form" method="post" action="success.jsp">
+<form role="form" method="post">
 <div class="box-body">
 	<div class="form-group">
 		<label for="exampleInputEmail1">Title</label>
