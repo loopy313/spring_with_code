@@ -20,12 +20,13 @@ public class BoardController{
 	private BoardService service;
 	
 	@RequestMapping(value="/register",method=RequestMethod.GET)
-	public void registerGET(BoardVO board,Model model) throws Exception{
+	public String registerGET(BoardVO board,Model model) throws Exception{
 		logger.info("register get ................");
+		return "/board/register";
 	}
 	
 	@RequestMapping(value="/register",method=RequestMethod.POST)
-	public String registPOST(BoardVO board,Model model) throws Exception{
+	public String registerPOST(BoardVO board,Model model) throws Exception{
 		logger.info("regist post .............");
 		logger.info(board.toString());
 		
