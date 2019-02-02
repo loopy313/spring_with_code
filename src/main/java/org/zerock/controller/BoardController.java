@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.domain.BoardVO;
 import org.zerock.service.BoardService;
@@ -42,5 +43,26 @@ public class BoardController{
 	public String listAll(Model model) throws Exception{
 		model.addAttribute("list",service.listAll());
 		return "board/listAll";
+	}
+	@RequestMapping(value="/read",method=RequestMethod.GET)
+	public String read(@RequestParam("bno")int bno,Model model) throws Exception{
+		model.addAttribute(service.read(bno));
+		return "board/read";
+	}
+	@RequestMapping(value="/remove",method=RequestMethod.POST)
+	public String remove(@RequestParam("bno")int bno,RedirectAttributes rttr) throws Exception{
+		service.delete(bno);
+		rttr.addFlashAttribute("msg","success");
+		return "redirect:/board/listAll";
+	}
+	@RequestMapping(value="/modify",method=RequestMethod.GET)
+	public void modifyGET(@RequestParam("bno")int bno,Model model) throws Exception{
+		model.addAttribute(service.read(bno));
+	}
+	@RequestMapping(value="/modify",method=RequestMethod.POST)
+	public String modifyPOST(BoardVO board,RedirectAttributes rttr) throws Exception{
+		service.update(board);
+		rttr.addFlashAttribute("msg","success");
+		return "redirect:/board/listAll";
 	}
 }
