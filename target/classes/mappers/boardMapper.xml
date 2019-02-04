@@ -18,4 +18,12 @@
   <select id="listAll" resultType="BoardVO">
   <![CDATA[select * from tbl_board where bno>0 order by bno desc,regdate desc]]>
   </select>
+  <select id="listPage" resultType="BoardVO">
+  <![CDATA[select x.* from(select rownum rnum,a.* from(select * from tbl_board order by bno) a 
+  where rownum <=#{page}*10) x where x.rnum>=(#{page}-1)*10]]>
+  </select>
+  <select id="listCriteria" resultType="BoardVO">
+  <![CDATA[select x.* from(select rownum rnum,a.* from(select * from tbl_board order by bno) a 
+  where rownum <=#{page}*#{perPageNum}) x where x.rnum>=(#{page}-1)*#{perPageNum}]]>
+  </select>
   </mapper>
