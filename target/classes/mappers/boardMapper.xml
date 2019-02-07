@@ -26,4 +26,7 @@
   <![CDATA[select x.* from(select rownum rnum,a.* from(select * from tbl_board order by bno) a 
   where rownum <=#{page}*#{perPageNum}) x where x.rnum>=(#{page}-1)*#{perPageNum}]]>
   </select>
+  <select id="countPaging" resultType="int">
+  <![CDATA[select count(bno) from tbl_board where bno>0]]>
+  </select>
   </mapper>
