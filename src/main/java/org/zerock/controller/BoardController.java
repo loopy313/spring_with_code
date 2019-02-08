@@ -6,11 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
+import org.zerock.domain.PageMaker;
 import org.zerock.service.BoardService;
 
 @Controller
@@ -64,5 +67,43 @@ public class BoardController{
 		service.update(board);
 		rttr.addFlashAttribute("msg","success");
 		return "redirect:/board/listAll";
+	}
+	@RequestMapping(value="/listCri",method=RequestMethod.GET)
+	public String listAll(Criteria cri,Model model) throws Exception{
+		model.addAttribute("list",service.listCriteria(cri));
+		return "board/listCri";
+	}
+	@RequestMapping(value="/listPage",method=RequestMethod.GET)
+	public void listPage(@ModelAttribute("cri")Criteria cri,Model model) throws Exception{
+		model.addAttribute("list",service.listCriteria(cri));
+		PageMaker pageMaker=new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(service.listCountCriteria(cri));
+		
+		model.addAttribute("pageMaker",pageMaker);
+	}
+	@RequestMapping(value="/readPage",method=RequestMethod.GET)
+	public void read(@RequestParam("bno") int bno, @ModelAttribute("cri") Criteria cri,Model model) throws Exception{
+		model.addAttribute(service.read(bno));
+	}
+	@RequestMapping(value="/removePage",method=RequestMethod.GET)
+	public String remove(@RequestParam("bno")int bno,Criteria cri,RedirectAttributes rttr) throws Exception{
+		service.delete(bno);
+		rttr.addAttribute("page",cri.getPage());
+		rttr.addAttribute("perPageNum",cri.getPerPageNum());
+		rttr.addFlashAttribute("msg","SUCCESS");
+		return "redirect:/board/listPage";
+	}
+	@RequestMapping(value="/modifyPage",method=RequestMethod.GET)
+	public void modifyPagingGET(@RequestParam("bno")int bno,@ModelAttribute("cri") Criteria cri,Model model) throws Exception{
+		model.addAttribute(service.read(bno));
+	}
+	@RequestMapping(value="/modifyPage",method=RequestMethod.POST)
+	public String modifyPagingPOST(BoardVO board,Criteria cri,RedirectAttributes rttr) throws Exception{
+		service.update(board);
+		rttr.addAttribute("page",cri.getPage());
+		rttr.addAttribute("perPageNum",cri.getPerPageNum());
+		rttr.addAttribute("msg","SUCCESS");
+		return "redirect:/board/listPage";
 	}
 }
